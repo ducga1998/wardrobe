@@ -37,10 +37,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> _buildActions(BuildContext context) {
     return <Widget>[
+      _buildUIKitButton(),
       _buildLanguageButton(),
       _buildThemeButton(),
       _buildLogoutButton(),
     ];
+  }
+
+  Widget _buildUIKitButton() {
+    return IconButton(
+      onPressed: () {
+        Navigator.of(context).pushNamed(Routes.uiKitExample);
+      },
+      icon: Icon(Icons.palette),
+      tooltip: 'UI Kit Examples',
+    );
   }
 
   Widget _buildThemeButton() {

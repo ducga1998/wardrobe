@@ -1,10 +1,10 @@
-import 'package:boilerplate/constants/app_theme.dart';
 import 'package:boilerplate/constants/strings.dart';
 import 'package:boilerplate/presentation/home/home.dart';
 import 'package:boilerplate/presentation/home/store/language/language_store.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/login/login.dart';
 import 'package:boilerplate/presentation/login/store/login_store.dart';
+import 'package:boilerplate/ui_kit/apple_ui_kit.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/utils/routes/routes.dart';
 import 'package:flutter/material.dart';
@@ -28,9 +28,10 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: Strings.appName,
-          theme: _themeStore.darkMode
-              ? AppThemeData.darkThemeData
-              : AppThemeData.lightThemeData,
+          // Apple UI Kit Theme - responds to dark mode setting
+          theme: AppleTheme.lightTheme(),
+          darkTheme: AppleTheme.darkTheme(),
+          themeMode: _themeStore.darkMode ? ThemeMode.dark : ThemeMode.light,
           routes: Routes.routes,
           locale: Locale(_languageStore.locale),
           supportedLocales: _languageStore.supportedLanguages

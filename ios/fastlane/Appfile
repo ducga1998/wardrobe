@@ -1,0 +1,5 @@
+app_identifier("com.example.flutter_boilerplate") # The bundle identifier of your app
+apple_id("user@email.com") # Your Apple email address
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile

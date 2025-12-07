@@ -1,0 +1,12 @@
+default_platform(:android)
+
+platform :android do
+  desc "Deploy a new version to the Google Play"
+  lane :beta do
+    # Build the AAB
+    gradle(task: "clean bundleRelease")
+
+    # Upload to Google Play (Internal App Sharing or Internal Track)
+    upload_to_play_store(track: "internal")
+  end
+end
