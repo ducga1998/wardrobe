@@ -10,6 +10,10 @@ import 'package:boilerplate/domain/usecase/post/udpate_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/is_logged_in_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/login_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/save_login_in_status_usecase.dart';
+import 'package:boilerplate/domain/usecase/auth/register_usecase.dart';
+import 'package:boilerplate/domain/usecase/auth/login_usecase.dart' as auth_ops;
+import 'package:boilerplate/domain/usecase/auth/logout_usecase.dart';
+import 'package:boilerplate/domain/repository/auth/auth_repository.dart';
 
 import '../../../di/service_locator.dart';
 
@@ -24,6 +28,15 @@ class UseCaseModule {
     );
     getIt.registerSingleton<LoginUseCase>(
       LoginUseCase(getIt<UserRepository>()),
+    );
+    getIt.registerSingleton<auth_ops.LoginUseCase>(
+      auth_ops.LoginUseCase(getIt<AuthRepository>()),
+    );
+    getIt.registerSingleton<RegisterUseCase>(
+      RegisterUseCase(getIt<AuthRepository>()),
+    );
+    getIt.registerSingleton<LogoutUseCase>(
+      LogoutUseCase(getIt<AuthRepository>()),
     );
 
     // post:--------------------------------------------------------------------

@@ -9,6 +9,10 @@ import 'package:boilerplate/features/wardrobe/models/wardrobe_item.dart';
 
 // Placeholder screens
 import 'package:boilerplate/presentation/home/widgets/home_content.dart';
+import 'package:boilerplate/features/auth/presentation/screens/login_screen.dart';
+import 'package:boilerplate/features/auth/presentation/screens/register_screen.dart';
+import 'package:boilerplate/features/auth/presentation/controllers/auth_controller.dart';
+import 'dart:async';
 
 
 class SettingsScreen extends StatelessWidget {
@@ -54,10 +58,45 @@ class ScaffoldWithNavBar extends StatelessWidget {
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final appRouterProvider = Provider<GoRouter>((ref) {
+  // This notifier listens to auth state changes to trigger router refresh
+  final listenable = ValueNotifier<bool>(true);
+  
+  ref.listen<AsyncValue<bool>>(authControllerProvider, (_, __) {
+    // Notify GoRouter to re-evaluate redirect
+    listenable.value = !listenable.value;
+  });
+
   return GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: '/',
+    refreshListenable: listenable,
+    redirect: (context, state) {
+      final authState = ref.read(authControllerProvider);
+      
+      // If loading or error, we might want to stay put or handle differently.
+      // For now, assuming false if not data.
+      final isLoggedIn = authState.valueOrNull ?? false;
+      
+      final isLoggingIn = state.uri.path == '/login';
+      final isRegistering = state.uri.path == '/register';
+
+      if (!isLoggedIn) {
+        if (isLoggingIn || isRegistering) return null;
+        return '/login';
+      }
+
+      if (isLoggingIn || isRegistering) return '/';
+      return null;
+    },
     routes: [
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/register',
+        builder: (context, state) => const RegisterScreen(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return ScaffoldWithNavBar(navigationShell: navigationShell);
@@ -67,9 +106,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/',
-                builder: (context, state) => const Scaffold(
+                builder: (context, state) => Scaffold(
                   backgroundColor: Colors.white,
-                  body: HomeContent(),
+                  appBar: AppBar(
+                    title: const Text('Home'),
+                    actions: [
+                      IconButton(
+                        icon: const Icon(Icons.logout),
+                        onPressed: () {
+                          ref.read(authControllerProvider.notifier).logout();
+                        },
+                      ),
+                    ],
+                  ),
+                  body: const HomeContent(),
                 ),
               ),
             ],

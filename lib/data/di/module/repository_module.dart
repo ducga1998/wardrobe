@@ -6,6 +6,8 @@ import 'package:boilerplate/data/repository/post/post_repository_impl.dart';
 import 'package:boilerplate/data/repository/setting/setting_repository_impl.dart';
 import 'package:boilerplate/data/repository/user/user_repository_impl.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
+import 'package:boilerplate/data/repository/auth/auth_repository_impl.dart';
+import 'package:boilerplate/domain/repository/auth/auth_repository.dart';
 import 'package:boilerplate/domain/repository/post/post_repository.dart';
 import 'package:boilerplate/domain/repository/setting/setting_repository.dart';
 import 'package:boilerplate/domain/repository/user/user_repository.dart';
@@ -26,6 +28,11 @@ class RepositoryModule {
     getIt.registerSingleton<PostRepository>(PostRepositoryImpl(
       getIt<PostApi>(),
       getIt<PostDataSource>(),
+    ));
+
+    getIt.registerSingleton<AuthRepository>(AuthRepositoryImpl(
+      getIt<AuthApi>(),
+      getIt<SharedPreferenceHelper>(),
     ));
   }
 }

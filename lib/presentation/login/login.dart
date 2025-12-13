@@ -111,7 +111,8 @@ class _LoginScreenState extends State<LoginScreen> {
             _buildUserIdField(),
             _buildPasswordField(),
             _buildForgotPasswordButton(),
-            _buildSignInButton()
+            _buildSignInButton(),
+            _buildRegisterButton(),
           ],
         ),
       ),
@@ -192,6 +193,23 @@ class _LoginScreenState extends State<LoginScreen> {
           _showErrorMessage('Please fill in all fields');
         }
       },
+    );
+  }
+
+  Widget _buildRegisterButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: Center(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed(Routes.register);
+          },
+          child: Text(
+            AppLocalizations.of(context).translate('login_btn_sign_up') ?? 'Register',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.orangeAccent),
+          ),
+        ),
+      ),
     );
   }
 

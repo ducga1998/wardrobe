@@ -11,6 +11,7 @@ import 'package:boilerplate/presentation/home/store/language/language_store.dart
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/login/store/login_store.dart';
 import 'package:boilerplate/presentation/post/store/post_store.dart';
+import 'package:boilerplate/domain/usecase/auth/logout_usecase.dart';
 
 import '../../../di/service_locator.dart';
 
@@ -31,6 +32,7 @@ class StoreModule {
         getIt<LoginUseCase>(),
         getIt<FormErrorStore>(),
         getIt<ErrorStore>(),
+        getIt<LogoutUseCase>(),
       ),
     );
 

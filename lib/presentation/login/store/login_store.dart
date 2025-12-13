@@ -6,6 +6,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../../domain/entity/user/user.dart';
 import '../../../domain/usecase/user/login_usecase.dart';
+import 'package:boilerplate/domain/usecase/auth/logout_usecase.dart';
 
 part 'login_store.g.dart';
 
@@ -19,6 +20,7 @@ abstract class _UserStore with Store {
     this._loginUseCase,
     this.formErrorStore,
     this.errorStore,
+    this._logoutUseCase,
   ) {
     // setting up disposers
     _setupDisposers();
@@ -33,6 +35,7 @@ abstract class _UserStore with Store {
   final IsLoggedInUseCase _isLoggedInUseCase;
   final SaveLoginStatusUseCase _saveLoginStatusUseCase;
   final LoginUseCase _loginUseCase;
+  final LogoutUseCase _logoutUseCase;
 
   // stores:--------------------------------------------------------------------
   // for handling form errors
@@ -91,6 +94,7 @@ abstract class _UserStore with Store {
   logout() async {
     this.isLoggedIn = false;
     await _saveLoginStatusUseCase.call(params: false);
+    _logoutUseCase.call(params: null);
   }
 
   // general methods:-----------------------------------------------------------
