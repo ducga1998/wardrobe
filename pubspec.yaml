@@ -60,6 +60,12 @@ dependencies:
   # W
   # X
   xxtea: ^2.1.0
+  flutter_riverpod: ^2.6.1
+  go_router: ^17.0.0
+  sqflite: ^2.4.2
+  uuid: ^4.5.2
+  equatable: ^2.0.7
+  image_picker: ^1.2.1
   # Y
   # Z
 

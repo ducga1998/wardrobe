@@ -1,13 +1,5 @@
-import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
-import 'package:boilerplate/di/service_locator.dart';
-import 'package:boilerplate/presentation/home/store/language/language_store.dart';
-import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
-import 'package:boilerplate/presentation/post/post_list.dart';
-import 'package:boilerplate/utils/locale/app_localization.dart';
-import 'package:boilerplate/utils/routes/routes.dart';
+import 'package:boilerplate/presentation/home/widgets/home_content.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -15,137 +7,80 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  //stores:---------------------------------------------------------------------
-  final ThemeStore _themeStore = getIt<ThemeStore>();
-  final LanguageStore _languageStore = getIt<LanguageStore>();
+  int _selectedIndex = 0;
+
+  final List<Widget> _pages = [
+    HomeContent(),
+    Center(child: Text('Closet Page')),
+    Center(child: Text('Add Page')), // Placeholder for the middle button action
+    Center(child: Text('Outfit Page')),
+    Center(child: Text('Explore Page')),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
-      body: PostListScreen(),
-    );
-  }
-
-  // app bar methods:-----------------------------------------------------------
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      title: Text(AppLocalizations.of(context).translate('home_tv_posts')),
-      actions: _buildActions(context),
-    );
-  }
-
-  List<Widget> _buildActions(BuildContext context) {
-    return <Widget>[
-      _buildUIKitButton(),
-      _buildLanguageButton(),
-      _buildThemeButton(),
-      _buildLogoutButton(),
-    ];
-  }
-
-  Widget _buildUIKitButton() {
-    return IconButton(
-      onPressed: () {
-        Navigator.of(context).pushNamed(Routes.uiKitExample);
-      },
-      icon: Icon(Icons.palette),
-      tooltip: 'UI Kit Examples',
-    );
-  }
-
-  Widget _buildThemeButton() {
-    return Observer(
-      builder: (context) {
-        return IconButton(
-          onPressed: () {
-            _themeStore.changeBrightnessToDark(!_themeStore.darkMode);
-          },
-          icon: Icon(
-            _themeStore.darkMode ? Icons.brightness_5 : Icons.brightness_3,
+      backgroundColor: Colors.white,
+      body: _selectedIndex == 2 
+          ? _pages[_selectedIndex] // Handle the middle button if it was a page, but usually it's a modal
+          : _pages[_selectedIndex], 
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        notchMargin: 8.0,
+        child: Container(
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              _buildTabItem(icon: Icons.home_filled, label: 'Home', index: 0),
+              _buildTabItem(icon: Icons.door_sliding_outlined, label: 'Closet', index: 1),
+              SizedBox(width: 48), // Space for FAB
+              _buildTabItem(icon: Icons.checkroom, label: 'Outfit', index: 3),
+              _buildTabItem(icon: Icons.explore_outlined, label: 'Explore', index: 4),
+            ],
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildLogoutButton() {
-    return IconButton(
-      onPressed: () {
-        SharedPreferences.getInstance().then((preference) {
-          preference.setBool(Preferences.is_logged_in, false);
-          Navigator.of(context).pushReplacementNamed(Routes.login);
-        });
-      },
-      icon: Icon(
-        Icons.power_settings_new,
-      ),
-    );
-  }
-
-  Widget _buildLanguageButton() {
-    return IconButton(
-      onPressed: () {
-        _buildLanguageDialog();
-      },
-      icon: Icon(
-        Icons.language,
-      ),
-    );
-  }
-
-  _buildLanguageDialog() {
-    _showDialog<String>(
-      context: context,
-      child: AlertDialog(
-        // borderRadius: 5.0,
-        // enableFullWidth: true,
-
-        title: Text(
-          AppLocalizations.of(context).translate('home_tv_choose_language'),
         ),
-        // headerColor: Theme.of(context).primaryColor,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        // closeButtonColor: Colors.white,
-        // enableCloseButton: true,
-        // enableBackButton: false,
-        // onCloseButtonClicked: () {
-        //   Navigator.of(context).pop();
-        // },
-        actions: _languageStore.supportedLanguages
-            // children: _languageStore.supportedLanguages
-            .map(
-              (object) => ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.all(0.0),
-                title: Text(
-                  object.language,
-                  style: TextStyle(
-                    color: _languageStore.locale == object.locale
-                        ? Theme.of(context).primaryColor
-                        : _themeStore.darkMode
-                            ? Colors.white
-                            : Colors.black,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  // change user language based on selected locale
-                  _languageStore.changeLanguage(object.locale);
-                },
-              ),
-            )
-            .toList(),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Handle add action
+        },
+        backgroundColor: Colors.black,
+        child: Icon(Icons.add, color: Colors.white),
+        elevation: 2.0,
+        shape: CircleBorder(),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
-  _showDialog<T>({required BuildContext context, required Widget child}) {
-    showDialog<T>(
-      context: context,
-      builder: (BuildContext context) => child,
-    ).then<void>((T? value) {
-      // The value passed to Navigator.pop() or null.
-    });
+  Widget _buildTabItem({required IconData icon, required String label, required int index}) {
+    final isSelected = _selectedIndex == index;
+    return InkWell(
+      onTap: () => _onItemTapped(index),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: isSelected ? Colors.black : Colors.grey,
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              color: isSelected ? Colors.black : Colors.grey,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
