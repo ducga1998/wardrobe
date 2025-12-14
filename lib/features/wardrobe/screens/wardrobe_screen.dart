@@ -15,7 +15,7 @@ class WardrobeScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('My Wardrobe')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/wardrobe/import'),
+        onPressed: () => context.push('/add-item'),
         child: const Icon(Icons.add),
       ),
       body: wardrobeState.when(

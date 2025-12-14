@@ -6,6 +6,7 @@ import 'package:boilerplate/features/wardrobe/screens/import_screen.dart';
 import 'package:boilerplate/features/outfits/screens/outfits_screen.dart';
 import 'package:boilerplate/features/outfits/screens/try_on_screen.dart';
 import 'package:boilerplate/features/wardrobe/models/wardrobe_item.dart';
+import 'package:boilerplate/features/wardrobe/screens/add_item_screen.dart';
 
 // Placeholder screens
 import 'package:boilerplate/presentation/home/widgets/home_content.dart';
@@ -97,6 +98,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/register',
         builder: (context, state) => const RegisterScreen(),
       ),
+      GoRoute(
+        path: '/add-item',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const AddItemScreen(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return ScaffoldWithNavBar(navigationShell: navigationShell);
@@ -135,6 +141,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     parentNavigatorKey: rootNavigatorKey, // Use the defined root key
                     builder: (context, state) => const ImportScreen(),
                   ),
+
                 ],
               ),
             ],
