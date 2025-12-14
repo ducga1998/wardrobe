@@ -2,23 +2,33 @@
 description: Create a Pull Request for the current changes
 ---
 
-1. Create a new branch with a descriptive name.
+1. **Check Status**: Verify the current state of the repository and list changed files.
    ```bash
-   # Example: git checkout -b feature/my-feature-name
+   git status
    ```
-2. Add all changes.
+
+2. **Create Branch**: Create and switch to a new branch. Use a naming convention like `feature/name` or `fix/name`.
+   > If the branch already exists, use `git checkout <branch-name>` instead.
+   ```bash
+   git checkout -b <branch-name>
+   ```
+
+3. **Stage Changes**: Add all modified and new files to the staging area.
    ```bash
    git add .
    ```
-3. Commit the changes with a descriptive message.
+
+4. **Commit**: Commit the changes with a clear, conventional message (e.g., `feat: add new login screen`).
    ```bash
-   # Example: git commit -m "feat: description of changes"
+   git commit -m "<commit-message>"
    ```
-4. Push the branch to origin.
+
+5. **Push**: Push the branch to the remote repository and set the upstream tracking.
    ```bash
-   # Example: git push -u origin feature/my-feature-name
+   git push -u origin <branch-name>
    ```
-5. Create the PR using GitHub CLI.
+
+6. **Create PR**: Create the Pull Request using the GitHub CLI. Use `--fill` to populate the title and body from the commit message, or specify them manually.
    ```bash
    gh pr create --fill
    ```
